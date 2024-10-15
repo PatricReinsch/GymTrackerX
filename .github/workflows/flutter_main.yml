@@ -1,0 +1,70 @@
+name: Flutter CI/CD - Main
+
+# Auslöser für den Workflow
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Repository klonen
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      # Cache für Flutter-Pakete einrichten, um Builds zu beschleunigen
+      - name: Cache Flutter packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            **/build
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      # Flutter installieren
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.24.3
+
+      # Flutter Version anzeigen
+      - run: flutter --version
+
+      # Abhängigkeiten installieren
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Code-Analyse (Linting)
+      - name: Analyze code
+        run: flutter analyze
+
+      # Formatierungscheck (optional, aber nützlich)
+      - name: Check code formatting
+        run: flutter format --set-exit-if-changed .
+
+      # Unit-Tests ausführen
+      - name: Run unit tests
+        run: flutter test
+
+      # APK im Release-Modus erstellen
+      - name: Build APK (Release)
+        run: flutter build apk --release
+
+      # iOS-Build nur unter macOS
+      - name: Build iOS (Release)
+        if: runner.os == 'macOS'
+        run: flutter build ios --release --no-codesign
+
+      # Artefakt hochladen (APK)
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: apk-release
+          path: build/app/outputs/flutter-apk/app-release.apk
