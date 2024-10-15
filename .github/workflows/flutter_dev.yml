@@ -13,26 +13,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      # 1. Check out the code from the repository
+      - name: Clone repository
+        uses: actions/checkout@v3
 
+      # 2. Cache Flutter packages to speed up build
+      - name: Cache Flutter packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache        # Cache for Flutter dependencies
+            **/build            # Optionally cache the build folder
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}  # Cache based on pubspec.yaml hash
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      # 3. Set up Flutter with the stable version
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'stable'
 
+      # 4. Install Flutter dependencies
       - name: Install dependencies
         run: flutter pub get
 
+      # 5. Analyze the Dart code for issues
       - name: Analyze code
         run: flutter analyze
 
+      # 6. Run Flutter tests
       - name: Run tests
         run: flutter test
 
+      # 7. Build APK in debug mode for development purposes
       - name: Build APK
         run: flutter build apk --debug
 
-      - name: Upload Artifact
+      # 8. Upload the APK as an artifact
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v3
         with:
           name: apk-dev
