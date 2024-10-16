@@ -22,7 +22,7 @@ jobs:
         with:
           distribution: 'temurin' # Installiert die Temurin JDK (ehemals AdoptOpenJDK)
           java-version: '17'
-      
+
       # 2. Cache Flutter packages to speed up build
       - name: Cache Flutter packages
         uses: actions/cache@v3
