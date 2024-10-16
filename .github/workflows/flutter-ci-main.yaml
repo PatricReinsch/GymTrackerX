@@ -47,7 +47,7 @@ jobs:
 
       # Formatierungscheck (optional, aber nützlich)
       - name: Check code formatting
-        run: flutter format --set-exit-if-changed .
+        run: dart format --set-exit-if-changed .
 
       # Unit-Tests ausführen
       - name: Run unit tests
