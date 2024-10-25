@@ -5,4 +5,3 @@ void main() {
     expect(1, 1); // This will always pass.
   });
 }
-

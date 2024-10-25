@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'split_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,29 +10,62 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 150,
+        toolbarHeight: 150, // Reduced height of the AppBar
         title: SvgPicture.asset(
           'assets/images/logo/svg/logo-no-background.svg',
           height: 65,
           fit: BoxFit.cover,
         ),
+        centerTitle: true, // Centers the title/logo in the AppBar
       ),
-      body: const Center(
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          // Aligns items at the start
           children: [
-            SizedBox(height: 10),
-            Text(
-              "Create your first Plan",
-              style: TextStyle(
-                fontSize: 30, // Change this value to adjust font size
-                fontWeight: FontWeight.bold, // Optional: Make text bold
-                color: Colors.black, // Optional: Change text color
+            const SizedBox(height: 20), // Space from the top
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SplitScreen()),
+                );
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 4,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: const Column(
+                  children: [
+                    Text(
+                      "Create your first Plan",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Icon(CustomIcons.addCircleOutlineRounded, size: 60),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 20),
-            Icon(CustomIcons.addCircleOutlineRounded, size: 60),
-            // Custom icon
           ],
         ),
       ),
