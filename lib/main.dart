@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym_tracker_x/screens/home_screen.dart';
+import 'package:gym_tracker_x/screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,9 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'GymTrackerX',
-      home: HomeScreen(),
+      home: LoginPage(),
     );
   }
 }
