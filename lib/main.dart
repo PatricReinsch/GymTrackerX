@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker_x/screens/login_screen.dart';
-import 'package:dcdg/dcdg.dart';
 
 void main() {
   runApp(const MyApp());
