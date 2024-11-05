@@ -24,3 +24,5 @@ flutter:
 
   assets:
     - assets/images/logo/svg/logo-no-background.svg  # Add your SVG asset here
+    - assets/images/logo/svg/Logo.svg
+    - assets/images/logo/svg/Text.svg
