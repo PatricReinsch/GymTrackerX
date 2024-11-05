@@ -1,0 +1,41 @@
+@startuml
+autonumber
+
+actor User
+participant "LoginPage" as Login
+participant "AuthService" as Auth
+
+User -> Login: Enter credentials (username, password)
+activate User
+activate Login
+Login -> Auth: Authenticate(username, password)
+activate Auth
+Auth --> Login: Authentication success
+deactivate Auth
+Login --> User: Display success message
+deactivate Login
+deactivate User
+
+User -> Login: Request to view home
+activate User
+activate Login
+Login -> Auth: Fetch user details
+activate Auth
+Auth --> Login: Return user details
+deactivate Auth
+Login --> User: Redirect to HomeScreen
+deactivate Login
+deactivate User
+
+User -> Login: Request logout
+activate User
+activate Login
+Login -> Auth: Logout
+activate Auth
+Auth --> Login: Logout success
+deactivate Auth
+Login --> User: Display logout message
+deactivate Login
+deactivate User
+
+@enduml
