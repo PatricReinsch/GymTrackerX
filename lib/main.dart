@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:gym_tracker_x/screens/login_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
