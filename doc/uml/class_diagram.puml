@@ -1,0 +1,134 @@
+@startuml
+set namespaceSeparator ::
+
+class "gym_tracker_x::main.dart::MyApp" {
+  +Widget build()
+}
+
+class "gym_tracker_x::models::exercise.dart::Exercise" {
+  +String exerciseId
+  +String name
+  +String description
+  +int duration
+  +int repetitions
+  +Map<String, dynamic> toJson()
+}
+
+class "gym_tracker_x::models::split.dart::Split" {
+  +String splitId
+  +String name
+  +String description
+  +List<String> workoutIds
+  +Map<String, dynamic> toJson()
+}
+
+class "gym_tracker_x::models::user.dart::User" {
+  +String userId
+  +String name
+  +String email
+  +String token
+  +Map<String, dynamic> toJson()
+}
+
+class "gym_tracker_x::models::workout.dart::Workout" {
+  +String workoutId
+  +String title
+  +String description
+  +List<String> exerciseIds
+  +Map<String, dynamic> toJson()
+}
+
+class "gym_tracker_x::screens::exercise_screen.dart::ExerciseScreen" {
+  +Widget build()
+}
+
+class "gym_tracker_x::screens::home_screen.dart::HomeScreen" {
+  +Widget build()
+}
+
+class "gym_tracker_x::screens::login_screen.dart::LoginPage" {
+  -TextEditingController _usernameController
+  -TextEditingController _passwordController
+  +Widget build()
+}
+
+class "gym_tracker_x::screens::planer_screen.dart::PlanerScreen" {
+  +Widget build()
+}
+
+class "gym_tracker_x::screens::register_screen.dart::RegisterScreen" {
+  +Widget build()
+}
+
+class "gym_tracker_x::screens::split_screen.dart::SplitScreen" {
+  +Widget build()
+}
+
+class "gym_tracker_x::screens::training_screen.dart::TrainingScreen" {
+  +Widget build()
+}
+
+class "gym_tracker_x::services::auth_service.dart::AuthService" {
+}
+
+class "gym_tracker_x::services::exercise_service.dart::ExerciseService" {
+}
+
+class "gym_tracker_x::services::split_service.dart::SplitService" {
+}
+
+class "gym_tracker_x::services::workout_service.dart::WorkoutService" {
+}
+
+class "gym_tracker_x::utils::icons.dart::CustomIcons" {
+  {static} +IconData addCircleOutlineRounded
+}
+
+class "gym_tracker_x::widgets::app_bar_title.dart::AppBarTitle" {
+  +Widget build()
+}
+
+class "gym_tracker_x::widgets::custom_button.dart::CustomButton" {
+  +String label
+  +Widget build()
+}
+
+class "gym_tracker_x::widgets::exercise_card.dart::ExerciseCard" {
+  +String name
+  +String description
+  +int duration
+  +int repetitions
+  +Widget build()
+}
+
+class "gym_tracker_x::widgets::split_card.dart::SplitCard" {
+  +String name
+  +String description
+  +Widget build()
+}
+
+class "gym_tracker_x::widgets::workout_card.dart::WorkoutCard" {
+  +String title
+  +String description
+  +Widget build()
+}
+
+User "1" -- "0..*" Workout : owns
+Workout "1" -- "0..*" Exercise : contains
+Split "1" -- "0..*" Workout : includes
+ExerciseScreen --> Exercise : displays
+SplitScreen --> Split : displays
+TrainingScreen --> Workout : utilizes
+AuthService --> User : manages
+ExerciseService --> Exercise : manages
+SplitService --> Split : manages
+WorkoutService --> Workout : manages
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "gym_tracker_x::widgets::exercise_card.dart::ExerciseCard"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "gym_tracker_x::widgets::split_card.dart::SplitCard"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "gym_tracker_x::widgets::workout_card.dart::WorkoutCard"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "gym_tracker_x::widgets::app_bar_title.dart::AppBarTitle"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "gym_tracker_x::widgets::custom_button.dart::CustomButton"
+
+"gym_tracker_x::widgets::custom_button.dart::CustomButton" o-- "dart::ui::void Function()" : onPressed
+@enduml

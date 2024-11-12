@@ -1,0 +1,26 @@
+@startuml
+actor User
+participant "ExerciseScreen" as ExerciseScreen
+participant "ExerciseService" as ExerciseService
+participant "Exercise" as Exercise
+
+activate User
+User -> ExerciseScreen: Übungsdetails eingeben
+activate ExerciseScreen
+
+ExerciseScreen -> ExerciseService: addExercise(name, description, duration, repetitions)
+activate ExerciseService
+
+ExerciseService -> Exercise: new Exercise instance
+activate Exercise
+
+Exercise --> ExerciseService: Exercise gespeichert
+deactivate Exercise
+
+ExerciseService -> ExerciseScreen: Übung erfolgreich hinzugefügt
+deactivate ExerciseService
+
+ExerciseScreen -> User: Bestätigung "Übung hinzugefügt"
+deactivate ExerciseScreen
+deactivate User
+@enduml
