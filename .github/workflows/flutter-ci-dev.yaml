@@ -20,7 +20,7 @@ jobs:
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin' # Installiert die Temurin JDK (ehemals AdoptOpenJDK)
+          distribution: 'temurin'
           java-version: '17'
 
       # 2. Cache Flutter packages to speed up build

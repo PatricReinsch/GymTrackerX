@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker_x/widgets/logo_with_name_below.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  LoginPage({super.key});
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
