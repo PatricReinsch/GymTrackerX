@@ -10,20 +10,20 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 150, // Reduced height of the AppBar
+        toolbarHeight: 150,
         title: SvgPicture.asset(
           'assets/images/logo/svg/logo-no-background.svg',
           height: 65,
           fit: BoxFit.cover,
         ),
-        centerTitle: true, // Centers the title/logo in the AppBar
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           // Aligns items at the start
           children: [
-            const SizedBox(height: 20), // Space from the top
+            const SizedBox(height: 20),
             InkWell(
               onTap: () {
                 Navigator.push(
