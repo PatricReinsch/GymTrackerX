@@ -96,7 +96,7 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             // 'Go to RegisterScreen' Button
-            CustomButtonWhite(label: "Start to save your Gains",
+            CustomButtonWhite(label: "Create account",
                 onPressed: () {
                   Navigator.push(
                     context,

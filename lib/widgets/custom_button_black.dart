@@ -17,14 +17,14 @@ class CustomButtonBlack extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.black,
         padding:
-        const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+        const EdgeInsets.symmetric(horizontal: 120, vertical: 15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
       ),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 18, color: Colors.white),
+        style: const TextStyle(fontSize: 24, color: Colors.white),
       ),
     );
   }

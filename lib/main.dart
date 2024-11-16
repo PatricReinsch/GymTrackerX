@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gym_tracker_x/screens/login_screen.dart';
+import 'package:gym_tracker_x/screens/exercise_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'GymTrackerX',
       home: LoginScreen(),
+      routes: {
+        '/exercisescreen': (context) => ExerciseScreen(),
+      },
     );
   }
 }

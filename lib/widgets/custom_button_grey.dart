@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CustomButtonWhite extends StatelessWidget {
+class CustomButtonGrey extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const CustomButtonWhite({
+  const CustomButtonGrey({
     super.key,
     required this.label,
     required this.onPressed,
@@ -15,7 +15,7 @@ class CustomButtonWhite extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey.shade300,
         padding:
         const EdgeInsets.symmetric(horizontal: 120, vertical: 15),
         shape: RoundedRectangleBorder(
