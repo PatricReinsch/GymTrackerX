@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker_x/widgets/logo_with_name_below.dart';
+import 'package:flutter/services.dart';
+import 'package:gym_tracker_x/widgets/custom_button_black.dart';
+import 'package:gym_tracker_x/widgets/custom_button_white.dart';
+import 'package:gym_tracker_x/screens/register_screen.dart';
+import 'package:gym_tracker_x/screens/home_screen.dart';
+
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -17,6 +23,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             LogoWithNameBelow(title: "Gym Tracker"),
             SizedBox(height: 100),
+            // Username textfield
             TextField(
               controller: _usernameController,
               textAlign: TextAlign.center,
@@ -43,9 +50,12 @@ class LoginScreen extends StatelessWidget {
                   borderSide: const BorderSide(color: Colors.black, width: 2.0),
                 ),
               ),
+              onTap: () {
+                SystemChannels.textInput.invokeMethod('TextInput.show'); // Erzwinge die Tastatur
+              },
             ),
             const SizedBox(height: 20),
-            // Passwort Feld zentriert
+            // Password textfield
             TextField(
               controller: _passwordController,
               textAlign: TextAlign.center,
@@ -76,31 +86,23 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             // Login Button
-            ElevatedButton(
-              onPressed: () {
-                // Login-Logik kann hier hinzugefügt werden
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              child: const Text(
-                'Login',
-                style: TextStyle(fontSize: 18),
-              ),
+            CustomButtonBlack(label: "Login",
+                onPressed: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+                }
             ),
             const SizedBox(height: 20),
-            // Untertitel
-            const Text(
-              'Start to save your Gains',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
-              ),
+            // 'Go to RegisterScreen' Button
+            CustomButtonWhite(label: "Start to save your Gains",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  );
+                }
             ),
           ],
         ),
