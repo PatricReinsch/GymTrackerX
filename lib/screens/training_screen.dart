@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gym_tracker_x/screens/exercise_screen.dart';
 import 'package:gym_tracker_x/widgets/custom_button_black.dart';
 import 'package:gym_tracker_x/widgets/custom_button_grey.dart';
 
