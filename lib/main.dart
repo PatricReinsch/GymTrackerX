@@ -13,9 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'GymTrackerX',
       home: LoginScreen(),
-      routes: {
-        '/exercisescreen': (context) => ExerciseScreen(),
-      },
     );
   }
 }
