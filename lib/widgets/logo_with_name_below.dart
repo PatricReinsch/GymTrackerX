@@ -17,7 +17,7 @@ class LogoWithNameBelow extends StatelessWidget {
             height: 200,
             fit: BoxFit.cover,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           SvgPicture.asset(
             'assets/images/logo/svg/Text.svg',
             height: 65,

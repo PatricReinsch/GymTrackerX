@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker_x/widgets/logo_with_name_below.dart';
+import 'package:gym_tracker_x/widgets/custom_button_black.dart';
+import 'package:gym_tracker_x/widgets/custom_button_white.dart';
+import 'package:gym_tracker_x/screens/login_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -17,6 +20,7 @@ class RegisterScreen extends StatelessWidget {
           children: [
             LogoWithNameBelow(title: "Gym Tracker"),
             SizedBox(height: 100),
+            // Username textfield
             TextField(
               controller: _usernameController,
               textAlign: TextAlign.center,
@@ -45,7 +49,6 @@ class RegisterScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Passwort Feld zentriert
             TextField(
               controller: _passwordController,
               textAlign: TextAlign.center,
@@ -76,42 +79,17 @@ class RegisterScreen extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             // Register Button
-            ElevatedButton(
-              onPressed: () {
-                // Register-Logik kann hier hinzugefügt werden
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              child: const Text(
-                'Register',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
+            CustomButtonBlack(label: "Register", onPressed: () {}),
             const SizedBox(height: 20),
-            // Untertitel
-            ElevatedButton(
-              onPressed: () {
-                // Back-to-Login-Logik kann hier hinzugefügt werden
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              child: const Text(
-                'Back to Login',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
+            // Back to Login Button
+            CustomButtonWhite(
+                label: "Back to Login",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                }),
           ],
         ),
       ),
