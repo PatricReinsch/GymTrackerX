@@ -5,7 +5,9 @@ import 'package:gym_tracker_x/widgets/custom_button_grey.dart';
 
 class TrainingScreen extends StatelessWidget {
   const TrainingScreen({super.key});
-  Widget _buildRow(BuildContext context, String text, Color color, String route) {
+
+  Widget _buildRow(
+      BuildContext context, String text, Color color, String route) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, route);
@@ -62,7 +64,8 @@ class TrainingScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildRow(context, 'Leg Press', Colors.green, '/exercisescreen'),
+                  _buildRow(
+                      context, 'Leg Press', Colors.green, '/exercisescreen'),
                   Divider(color: Colors.black, height: 1, thickness: 1),
                   _buildRow(context, 'Curls', Colors.green, '/exercisescreen'),
                   Divider(color: Colors.black, height: 1, thickness: 1),
@@ -76,16 +79,18 @@ class TrainingScreen extends StatelessWidget {
             ),
             const SizedBox(height: 25),
             // Timer
-            CustomButtonGrey(label: "Timer",
-                onPressed: () { //TO DO: add logic
-                }
-            ),
+            CustomButtonGrey(
+                label: "Timer",
+                onPressed: () {
+                  //TO DO: add logic
+                }),
             const SizedBox(height: 40),
             // Finish Button
-            CustomButtonBlack(label: "Finish",
-                onPressed: () { //TO DO: add logic
-                }
-            ),
+            CustomButtonBlack(
+                label: "Finish",
+                onPressed: () {
+                  //TO DO: add logic
+                }),
           ],
         ),
       ),
