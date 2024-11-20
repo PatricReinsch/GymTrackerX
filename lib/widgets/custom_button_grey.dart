@@ -16,8 +16,7 @@ class CustomButtonGrey extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.grey.shade300,
-        padding:
-        const EdgeInsets.symmetric(horizontal: 120, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 120, vertical: 15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),

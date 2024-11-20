@@ -80,20 +80,17 @@ class RegisterScreen extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             // Register Button
-            CustomButtonBlack(label: "Register",
-                onPressed: () {
-                }
-            ),
+            CustomButtonBlack(label: "Register", onPressed: () {}),
             const SizedBox(height: 20),
             // Back to Login Button
-            CustomButtonWhite(label: "Back to Login",
+            CustomButtonWhite(
+                label: "Back to Login",
                 onPressed: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
-                }
-            ),
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                }),
           ],
         ),
       ),

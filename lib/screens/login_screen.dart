@@ -6,7 +6,6 @@ import 'package:gym_tracker_x/widgets/custom_button_white.dart';
 import 'package:gym_tracker_x/screens/register_screen.dart';
 import 'package:gym_tracker_x/screens/home_screen.dart';
 
-
 class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -51,7 +50,8 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                SystemChannels.textInput.invokeMethod('TextInput.show'); // Erzwinge die Tastatur
+                SystemChannels.textInput
+                    .invokeMethod('TextInput.show'); // Erzwinge die Tastatur
               },
             ),
             const SizedBox(height: 20),
@@ -86,24 +86,24 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             // Login Button
-            CustomButtonBlack(label: "Login",
+            CustomButtonBlack(
+                label: "Login",
                 onPressed: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-                }
-            ),
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                }),
             const SizedBox(height: 20),
             // 'Go to RegisterScreen' Button
-            CustomButtonWhite(label: "Create account",
+            CustomButtonWhite(
+                label: "Create account",
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => RegisterScreen()),
                   );
-                }
-            ),
+                }),
           ],
         ),
       ),
