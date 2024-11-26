@@ -8,6 +8,7 @@ class ExerciseScreen extends StatefulWidget {
 }
 
 class ExerciseScreenState extends State<ExerciseScreen> {
+
   // Initialize the list of sets
   List<ExerciseSet> exerciseSets = [
     ExerciseSet(reps: 10, weight: 20.0),
@@ -23,122 +24,149 @@ class ExerciseScreenState extends State<ExerciseScreen> {
   }
 
   @override
+
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'GymTrackerX',
-          style: TextStyle(
-            fontSize: 50,
-            fontWeight: FontWeight.bold,
+
+    return Theme(data: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white,
+        textSelectionTheme: TextSelectionThemeData(
+            cursorColor: Colors.black,
+            selectionColor: Colors.black,
+            ),
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black, width: 1.0), // black border for not focused
+          ),
+          focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black, width: 2.0), // black boder for focused
+          ),
+      )
+    ),
+
+        child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'GymTrackerX',
+            style: TextStyle(
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: exerciseSets.length,
-                itemBuilder: (context, index) {
-                  final set = exerciseSets[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Set ${index + 1}'),
-                          Row(
-                            children: [
-                              // Field for repetitions
-                              SizedBox(
-                                width: 80,
-                                child: TextFormField(
-                                  initialValue: set.reps.toString(),
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    labelText: 'Reps',
-                                    border: OutlineInputBorder(),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: exerciseSets.length,
+                  itemBuilder: (context, index) {
+                    final set = exerciseSets[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Set ${index + 1}'),
+                            Row(
+                              children: [
+                                // Field for repetitions
+                                SizedBox(
+                                  width: 80,
+                                  child: TextFormField(
+                                    initialValue: set.reps.toString(),
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      labelText: 'Reps',
+                                      border: OutlineInputBorder(),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black) //here is border color normal
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.black, width: 2.0) //border color when focused
+                                      )
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        set.reps =
+                                            int.tryParse(value) ?? set.reps;
+                                      });
+                                    },
                                   ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      set.reps =
-                                          int.tryParse(value) ?? set.reps;
-                                    });
-                                  },
                                 ),
-                              ),
-                              SizedBox(width: 16),
-                              // Field for weight
-                              SizedBox(
-                                width: 100,
-                                child: TextFormField(
-                                  initialValue: set.weight.toString(),
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: true),
-                                  decoration: InputDecoration(
-                                    labelText: 'Weight (kg)',
-                                    border: OutlineInputBorder(),
+                                SizedBox(width: 16),
+                                // Field for weight
+                                SizedBox(
+                                  width: 100,
+                                  child: TextFormField(
+                                    initialValue: set.weight.toString(),
+                                    keyboardType: TextInputType.numberWithOptions(
+                                        decimal: true),
+                                    decoration: InputDecoration(
+                                      labelText: 'Weight (kg)',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        set.weight =
+                                            double.tryParse(value) ?? set.weight;
+                                      });
+                                    },
                                   ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      set.weight =
-                                          double.tryParse(value) ?? set.weight;
-                                    });
-                                  },
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: _addSet,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                  );
-                },
+                    child: Text('Add Set'),
+                  ),
+                  SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: _addSet,
+                    // Timer function to be added later, placeholder for now
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    child: Text('Timer'),
+                  ),
+                ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: _addSet,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                  child: Text('Add Set'),
-                ),
-                SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: _addSet,
-                  // Timer function to be added later, placeholder for now
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                  child: Text('Timer'),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
