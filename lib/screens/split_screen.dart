@@ -3,8 +3,15 @@ import 'package:flutter_svg/svg.dart';
 
 import 'planer_screen.dart';
 
-class SplitScreen extends StatelessWidget {
+class SplitScreen extends StatefulWidget {
   const SplitScreen({super.key});
+
+  @override
+  State<SplitScreen> createState() => _SplitScreenState();
+}
+
+class _SplitScreenState extends State<SplitScreen> {
+  double _currentValue = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +44,25 @@ class SplitScreen extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            const SizedBox(height: 10),
+            Text(
+              "Selected Split: ${_currentValue.toInt()}",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
             Slider(
-              value: 0,
-              min: 0,
-              max: 1,
-              divisions: 1,
-              onChanged: null,
+              value: _currentValue,
+              min: 1,
+              max: 7,
+              divisions: 6,
+              label: _currentValue.toInt().toString(),
+              onChanged: (double newValue) {
+                setState(() {
+                  _currentValue = newValue;
+                });
+              },
             ),
             const SizedBox(height: 40),
             InkWell(
