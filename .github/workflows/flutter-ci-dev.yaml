@@ -48,6 +48,10 @@ jobs:
       - name: Analyze code
         run: flutter analyze
 
+      # Check code formatting (optional but useful)
+      - name: Check code formatting
+        run: dart format --set-exit-if-changed .
+
       # 6. Run Flutter tests
       - name: Run tests
         run: flutter test
