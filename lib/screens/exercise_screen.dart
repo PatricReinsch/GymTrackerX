@@ -8,7 +8,6 @@ class ExerciseScreen extends StatefulWidget {
 }
 
 class ExerciseScreenState extends State<ExerciseScreen> {
-
   // Initialize the list of sets
   List<ExerciseSet> exerciseSets = [
     ExerciseSet(reps: 10, weight: 20.0),
@@ -24,28 +23,28 @@ class ExerciseScreenState extends State<ExerciseScreen> {
   }
 
   @override
-
   Widget build(BuildContext context) {
-
-    return Theme(data: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white,
-        textSelectionTheme: TextSelectionThemeData(
+    return Theme(
+      data: ThemeData(
+          brightness: Brightness.light,
+          primaryColor: Colors.white,
+          scaffoldBackgroundColor: Colors.white,
+          textSelectionTheme: TextSelectionThemeData(
             cursorColor: Colors.black,
             selectionColor: Colors.black,
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors.black,
+                  width: 1.0), // black border for not focused
             ),
-        inputDecorationTheme: InputDecorationTheme(
-          enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black, width: 1.0), // black border for not focused
-          ),
-          focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black, width: 2.0), // black boder for focused
-          ),
-      )
-    ),
-
-        child: Scaffold(
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors.black, width: 2.0), // black boder for focused
+            ),
+          )),
+      child: Scaffold(
         appBar: AppBar(
           title: Text(
             'GymTrackerX',
@@ -86,15 +85,19 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                                     initialValue: set.reps.toString(),
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
-                                      labelText: 'Reps',
-                                      border: OutlineInputBorder(),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black) //here is border color normal
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.black, width: 2.0) //border color when focused
-                                      )
-                                    ),
+                                        labelText: 'Reps',
+                                        border: OutlineInputBorder(),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors
+                                                    .black) //here is border color normal
+                                            ),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.black,
+                                                width:
+                                                    2.0) //border color when focused
+                                            )),
                                     onChanged: (value) {
                                       setState(() {
                                         set.reps =
@@ -109,16 +112,17 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                                   width: 100,
                                   child: TextFormField(
                                     initialValue: set.weight.toString(),
-                                    keyboardType: TextInputType.numberWithOptions(
-                                        decimal: true),
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            decimal: true),
                                     decoration: InputDecoration(
                                       labelText: 'Weight (kg)',
                                       border: OutlineInputBorder(),
                                     ),
                                     onChanged: (value) {
                                       setState(() {
-                                        set.weight =
-                                            double.tryParse(value) ?? set.weight;
+                                        set.weight = double.tryParse(value) ??
+                                            set.weight;
                                       });
                                     },
                                   ),
