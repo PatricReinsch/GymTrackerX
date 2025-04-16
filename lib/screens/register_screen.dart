@@ -49,6 +49,7 @@ class RegisterScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // Password textfield
             TextField(
               controller: _passwordController,
               textAlign: TextAlign.center,
