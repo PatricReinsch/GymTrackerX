@@ -1,30 +1,28 @@
 class User {
-  final String userId;
-  final String name;
-  final String email;
-  final String token;
+  final int? userId;
+  final String? username;
+  final String? token;
 
   User({
-    required this.userId,
-    required this.name,
-    required this.email,
-    required this.token,
+    this.userId,
+    this.username,
+    this.token,
   });
 
+  // Factory method to create a User object from a JSON response
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      userId: json['userId'],
-      name: json['name'],
-      email: json['email'],
-      token: json['token'],
+      userId: json['userId'] as int?,
+      username: json['username'] as String?,
+      token: json['token'] as String?,
     );
   }
 
+  // Method to convert the User object into a JSON format
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,
-      'name': name,
-      'email': email,
+      'username': username,
       'token': token,
     };
   }

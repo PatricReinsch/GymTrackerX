@@ -29,15 +29,12 @@ class HomeScreen extends StatelessWidget {
                 // Navigates to the SplitScreen when tapped
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const SplitScreen()),
+                  MaterialPageRoute(builder: (context) => const SplitScreen()),
                 );
               },
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(
-                        vertical: 30,
-                        horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
@@ -65,9 +62,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Icon(
-                        CustomIcons.addCircleOutlineRounded,
-                        size: 60),
+                    Icon(CustomIcons.addCircleOutlineRounded, size: 60),
                   ],
                 ),
               ),
