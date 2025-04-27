@@ -8,19 +8,18 @@ import 'dart:convert';
 import 'package:gym_tracker_x/utils/logger.dart';
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({super.key});
+  const RegisterScreen({super.key});
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  RegisterScreenState createState() => RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   // Function to register a user
-  Future<void> _registerUser(
-      String username, String password, BuildContext context) async {
+  Future<void> _registerUser(String username, String password) async {
     final url = Uri.parse(
         'http://10.0.2.2:5000/api/auth/register'); // Your API URL here
 
@@ -43,34 +42,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
       logger.d('Response Status Code: ${response.statusCode}');
       logger.d('Response Body: ${response.body}');
 
+      if (!mounted)
+        return; // Ensure widget is still mounted before doing UI updates
+
       if (response.statusCode == 201) {
         // Successful registration
         logger.i("User successfully registered!");
 
-        // Ensure context is still valid before doing UI updates
-        if (mounted) {
-          // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Successfully registered!'),
-            backgroundColor: Colors.green,
-          ));
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Successfully registered!'),
+          backgroundColor: Colors.green,
+        ));
 
-          // Navigate to the login screen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
-          );
-        }
+        // Navigate to the login screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
       } else {
         // Error in registration
         logger.e('Registration Error: ${response.body}');
-        if (mounted) {
-          // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Registration Error: ${response.body}'),
-            backgroundColor: Colors.red,
-          ));
-        }
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Registration Error: ${response.body}'),
+          backgroundColor: Colors.red,
+        ));
       }
     } catch (error) {
       // Log the error
@@ -178,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   }
 
                   logger.d('Sending registration for user: $username');
-                  _registerUser(username, password, context);
+                  _registerUser(username, password);
                 },
               ),
               const SizedBox(height: 20),

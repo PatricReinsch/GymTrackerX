@@ -11,10 +11,10 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService =
@@ -37,9 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false; // Hide loading indicator
     });
 
+    if (!mounted) {
+      return; // Ensure the widget is still mounted before using context
+    }
+
     if (user != null) {
       // Successfully logged in, navigate to HomeScreen
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
