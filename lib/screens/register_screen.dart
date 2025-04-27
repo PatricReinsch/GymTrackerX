@@ -42,8 +42,9 @@ class RegisterScreenState extends State<RegisterScreen> {
       logger.d('Response Status Code: ${response.statusCode}');
       logger.d('Response Body: ${response.body}');
 
-      if (!mounted)
+      if (!mounted) {
         return; // Ensure widget is still mounted before doing UI updates
+      }
 
       if (response.statusCode == 201) {
         // Successful registration
