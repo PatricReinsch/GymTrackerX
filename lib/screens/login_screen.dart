@@ -1,16 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker_x/widgets/logo_with_name_below.dart';
-import 'package:flutter/services.dart';
 import 'package:gym_tracker_x/widgets/custom_button_black.dart';
 import 'package:gym_tracker_x/widgets/custom_button_white.dart';
 import 'package:gym_tracker_x/screens/register_screen.dart';
 import 'package:gym_tracker_x/screens/home_screen.dart';
+import 'package:gym_tracker_x/services/auth_service.dart';
+import 'package:gym_tracker_x/models/user.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService =
+      AuthService(); // Create instance of AuthService
 
-  LoginScreen({super.key});
+  bool _isLoading = false; // Track loading state
+
+  void _login() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+
+    // Authenticate using AuthService
+    User? user = await _authService.login(username, password);
+
+    setState(() {
+      _isLoading = false; // Hide loading indicator
+    });
+
+    if (user != null) {
+      // Successfully logged in, navigate to HomeScreen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+      // Show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid username or password')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +88,6 @@ class LoginScreen extends StatelessWidget {
                   borderSide: const BorderSide(color: Colors.black, width: 2.0),
                 ),
               ),
-              onTap: () {
-                SystemChannels.textInput
-                    .invokeMethod('TextInput.show'); // Erzwinge die Tastatur
-              },
             ),
             const SizedBox(height: 20),
             // Password textfield
@@ -86,24 +121,23 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             // Login Button
-            CustomButtonBlack(
-                label: "Login",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
-                  );
-                }),
+            _isLoading
+                ? CircularProgressIndicator() // Show loading indicator
+                : CustomButtonBlack(
+                    label: "Login",
+                    onPressed: _login,
+                  ),
             const SizedBox(height: 20),
             // 'Go to RegisterScreen' Button
             CustomButtonWhite(
-                label: "Create account",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterScreen()),
-                  );
-                }),
+              label: "Create account",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                );
+              },
+            ),
           ],
         ),
       ),
