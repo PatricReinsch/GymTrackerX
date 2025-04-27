@@ -5,12 +5,18 @@ import 'package:gym_tracker_x/widgets/custom_button_black.dart';
 import 'package:gym_tracker_x/widgets/custom_button_white.dart';
 import 'package:gym_tracker_x/screens/login_screen.dart';
 import 'dart:convert';
+import 'package:gym_tracker_x/utils/logger.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  RegisterScreen({super.key});
+
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  RegisterScreen({super.key});
 
   // Function to register a user
   Future<void> _registerUser(
@@ -19,6 +25,10 @@ class RegisterScreen extends StatelessWidget {
         'http://10.0.2.2:5000/api/auth/register'); // Your API URL here
 
     try {
+      // Log the data being sent
+      logger.d(
+          "Sending registration data: username=$username, password=$password");
+
       // Sending POST request
       final response = await http.post(
         url,
@@ -29,36 +39,50 @@ class RegisterScreen extends StatelessWidget {
         }),
       );
 
-      // Print API response
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      // Log the API response
+      logger.d('Response Status Code: ${response.statusCode}');
+      logger.d('Response Body: ${response.body}');
 
       if (response.statusCode == 201) {
         // Successful registration
-        print("User successfully registered!");
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Successfully registered!'),
-          backgroundColor: Colors.green,
-        ));
-        // Navigate to the login screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
+        logger.i("User successfully registered!");
+
+        // Ensure context is still valid before doing UI updates
+        if (mounted) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Successfully registered!'),
+            backgroundColor: Colors.green,
+          ));
+
+          // Navigate to the login screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
+        }
       } else {
         // Error in registration
-        print('Registration Error: ${response.body}');
+        logger.e('Registration Error: ${response.body}');
+        if (mounted) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Registration Error: ${response.body}'),
+            backgroundColor: Colors.red,
+          ));
+        }
+      }
+    } catch (error) {
+      // Log the error
+      logger.e("Error: $error");
+
+      // Only update the UI if the widget is still mounted
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Registration Error: ${response.body}'),
+          content: Text('Error: $error'),
           backgroundColor: Colors.red,
         ));
       }
-    } catch (error) {
-      print("Error: $error");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error: $error'),
-        backgroundColor: Colors.red,
-      ));
     }
   }
 
@@ -143,15 +167,17 @@ class RegisterScreen extends StatelessWidget {
 
                   // Check if username and password are not empty
                   if (username.isEmpty || password.isEmpty) {
-                    print('Username and password cannot be empty.');
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Username and password cannot be empty.'),
-                      backgroundColor: Colors.red,
-                    ));
+                    logger.w('Username and password cannot be empty.');
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Username and password cannot be empty.'),
+                        backgroundColor: Colors.red,
+                      ));
+                    }
                     return;
                   }
 
-                  print('Sending registration for user: $username');
+                  logger.d('Sending registration for user: $username');
                   _registerUser(username, password, context);
                 },
               ),

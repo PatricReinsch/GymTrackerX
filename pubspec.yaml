@@ -14,6 +14,8 @@ dependencies:
   flutter_svg: ^2.0.11
   dcdg: ^4.1.0
   http: ^1.2.2
+  logger: ^1.1.0
+
 
 dev_dependencies:
   flutter_test:
