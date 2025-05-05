@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
-import 'package:gym_tracker_x/screens/exercise_screen.dart'
+//import 'package:flutter/material.dart';
+//import 'package:gym_tracker_x/screens/exercise_screen.dart'
 
 void main() {
   test('Placeholder test', () {
