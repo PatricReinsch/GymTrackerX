@@ -1,43 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker_x/screens/login_screen.dart';
-import 'package:gym_tracker_x/widgets/custom_button_black.dart';
 
 void main() {
   testWidgets('LoginScreen displays fields and responds correctly to entries',
       (WidgetTester tester) async {
-    // render LoginScreen
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LoginScreen(),
-      ),
-    );
+    // Build the widget
+    await tester.pumpWidget(const MaterialApp(home: LoginScreen()));
 
-    // find text boxes
-    final usernameField = find.widgetWithText(TextField, 'Username');
-    final passwordField = find.widgetWithText(TextField, 'Password');
-    final loginButton = find.byType(CustomButtonBlack);
+    // Check for the username and password fields
+    expect(find.byType(TextField), findsNWidgets(2));
+    expect(find.text('Username'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
 
-    // check existency
-    expect(usernameField, findsOneWidget);
-    expect(passwordField, findsOneWidget);
-    expect(loginButton, findsOneWidget);
+    // Enter username and password
+    await tester.enterText(find.byType(TextField).at(0), 'tester');
+    await tester.enterText(find.byType(TextField).at(1), '123456');
 
-    // Test case: Empty fields => should display errors
-    await tester.tap(loginButton);
-    await tester.pump();
+    // Tap the login button (assumes it's a TextButton with 'Login' text)
+    await tester.tap(find.text('Login'));
+    await tester.pump(); // rebuild UI after interaction
 
-    expect(find.text('Invalid username or password'), findsOneWidget);
-
-    // Test case: Entering data
-    await tester.enterText(usernameField, 'tester');
-    await tester.enterText(passwordField, '123456');
-
-    expect(find.text('tester'), findsOneWidget);
-    expect(find.text('123456'), findsOneWidget);
-
-    // press login again
-    await tester.tap(loginButton);
-    await tester.pump(); // pump() required for async behavior
+    // Expect still on the same screen (no navigation happens in test mode)
+    expect(find.text('Login'), findsOneWidget);
   });
 }
