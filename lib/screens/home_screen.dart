@@ -3,6 +3,7 @@ import '../utils/icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'split_screen.dart';
 import 'package:gym_tracker_x/services/workout_service.dart';
+import 'package:gym_tracker_x/utils/logger.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -33,6 +34,7 @@ class HomeScreen extends StatelessWidget {
                   final newPlanId = await WorkoutService.createWorkoutPlan(3, "My First Plan");
                   //TO DO: newPlanId is needed to assign splits to the correct workout_plan in the database
                   // Navigate to SplitScreen with planId
+                  if (!context.mounted) return;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -40,7 +42,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                 } catch (e) {
-                  print('Error when creating the plan: $e');
+                  logger.e('Error when creating the plan: $e');
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Error when creating the plan')),
                   );

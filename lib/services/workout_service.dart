@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:gym_tracker_x/utils/logger.dart';
 
 class WorkoutService {
   static const String baseUrl = "http://10.0.2.2:5000/api"; //backend URL
@@ -21,11 +22,11 @@ class WorkoutService {
         final data = jsonDecode(response.body);
         return data['id']; // ID of the new plan
       } else {
-        print('Error when creating the plan: ${response.statusCode} - ${response.body}');
+        logger.e('Error when creating the plan: ${response.statusCode} - ${response.body}');
         return null;
       }
     } catch (e) {
-      print('Network error when creating the plan: $e');
+      logger.e('Network error when creating the plan: $e');
       return null;
     }
   }
