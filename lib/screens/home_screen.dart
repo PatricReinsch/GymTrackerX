@@ -29,8 +29,9 @@ class HomeScreen extends StatelessWidget {
               onTap: () async {
                 try {
                   // Placeholder: user_id = 1, name = "My First Plan"
+                  // ignore: unused_local_variable
                   final newPlanId = await WorkoutService.createWorkoutPlan(3, "My First Plan");
-                  print(newPlanId); //TO DO: newPlanId is needed to assign splits to the correct workout_plan in the database
+                  //TO DO: newPlanId is needed to assign splits to the correct workout_plan in the database
                   // Navigate to SplitScreen with planId
                   Navigator.push(
                     context,
