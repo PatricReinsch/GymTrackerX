@@ -4,7 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'planer_screen.dart';
 
 class SplitScreen extends StatefulWidget {
-  const SplitScreen({super.key});
+  final int planId;
+  const SplitScreen({super.key, required this.planId});
 
   @override
   State<SplitScreen> createState() => _SplitScreenState();

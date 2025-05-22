@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../utils/icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'split_screen.dart';
+import 'package:gym_tracker_x/services/workout_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,11 +26,24 @@ class HomeScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
             InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SplitScreen()),
-                );
+              onTap: () async {
+                try {
+                  // Placeholder: user_id = 1, name = "My First Plan"
+                  final newPlanId = await WorkoutService.createWorkoutPlan(3, "My First Plan");
+
+                  // Navigate to SplitScreen with planId
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SplitScreen(planId: 1),
+                    ),
+                  );
+                } catch (e) {
+                  print('Error when creating the plan: $e');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Error when creating the plan')),
+                  );
+                }
               },
               child: Container(
                 padding:
