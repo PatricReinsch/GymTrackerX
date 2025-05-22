@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:gym_tracker_x/models/user.dart';
 import 'package:gym_tracker_x/utils/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final String _baseUrl = "http://10.0.2.2:5000/api/auth/login"; //backend URL
@@ -34,7 +35,21 @@ class AuthService {
             return null;
           }
 
-          return User.fromJson(data);
+          //return User.fromJson(data);
+          final user = User.fromJson(data);
+
+          if (user.userId == null) {
+            logger.e("Error: userId missing in the response");
+            return null;
+          }
+
+          // Save user_id locally
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setInt('user_id', user.userId!);
+
+          return user;
+
+
         } catch (e) {
           logger.e("Error parsing JSON response: $e");
           return null;
