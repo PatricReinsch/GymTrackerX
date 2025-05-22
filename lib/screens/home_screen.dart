@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                 try {
                   // Placeholder: user_id = 1, name = "My First Plan"
                   final newPlanId = await WorkoutService.createWorkoutPlan(3, "My First Plan");
-
+                  print(newPlanId); //TO DO: newPlanId is needed to assign splits to the correct workout_plan in the database
                   // Navigate to SplitScreen with planId
                   Navigator.push(
                     context,
