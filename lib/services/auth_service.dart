@@ -48,8 +48,6 @@ class AuthService {
           await prefs.setInt('user_id', user.userId!);
 
           return user;
-
-
         } catch (e) {
           logger.e("Error parsing JSON response: $e");
           return null;

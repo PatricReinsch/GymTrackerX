@@ -22,7 +22,8 @@ class WorkoutService {
         final data = jsonDecode(response.body);
         return data['id']; // ID of the new plan
       } else {
-        logger.e('Error when creating the plan: ${response.statusCode} - ${response.body}');
+        logger.e(
+            'Error when creating the plan: ${response.statusCode} - ${response.body}');
         return null;
       }
     } catch (e) {

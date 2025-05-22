@@ -31,7 +31,8 @@ class HomeScreen extends StatelessWidget {
                 try {
                   // Placeholder: user_id = 1, name = "My First Plan"
                   // ignore: unused_local_variable
-                  final newPlanId = await WorkoutService.createWorkoutPlan(3, "My First Plan");
+                  final newPlanId = await WorkoutService.createWorkoutPlan(
+                      3, "My First Plan");
                   //TO DO: newPlanId is needed to assign splits to the correct workout_plan in the database
                   // Navigate to SplitScreen with planId
                   if (!context.mounted) return;
@@ -45,7 +46,8 @@ class HomeScreen extends StatelessWidget {
                   logger.e('Error when creating the plan: $e');
                   if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Error when creating the plan')),
+                    const SnackBar(
+                        content: Text('Error when creating the plan')),
                   );
                 }
               },
