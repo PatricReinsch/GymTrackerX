@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes'); // Import authentication routes
 const workoutRoutes = require('./routes/workoutRoutes'); // Import workout routes
+const splitRoutes = require('./routes/splitRoutes');
+const splitExerciseRoutes = require('./routes/splitExerciseRoutes');
+
 
 // Load environment variables
 dotenv.config();
@@ -19,6 +22,9 @@ app.use(express.json());
 // Use authentication routes
 app.use('/api/auth', authRoutes);
 app.use('/api/workouts', workoutRoutes);
+app.use('/api/splits', splitRoutes);
+app.use('/api/split-exercises', splitExerciseRoutes);
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;

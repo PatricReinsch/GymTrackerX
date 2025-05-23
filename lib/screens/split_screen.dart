@@ -5,6 +5,7 @@ import 'planer_screen.dart';
 
 class SplitScreen extends StatefulWidget {
   final int planId;
+
   const SplitScreen({super.key, required this.planId});
 
   @override
@@ -70,7 +71,13 @@ class _SplitScreenState extends State<SplitScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PlanerScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => PlanerScreen(
+                      planId: widget.planId,
+                      totalSplits: _currentValue.toInt(),
+                      currentSplitIndex: 0,
+                    ),
+                  ),
                 );
               },
               child: Container(

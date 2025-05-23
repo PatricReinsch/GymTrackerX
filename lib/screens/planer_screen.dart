@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'home_screen.dart';
+import 'package:gym_tracker_x/services/split_service.dart';
 
 class PlanerScreen extends StatefulWidget {
-  const PlanerScreen({super.key});
+  final int planId;
+  final int totalSplits;
+  final int currentSplitIndex;
+
+  const PlanerScreen({
+    super.key,
+    required this.planId,
+    required this.totalSplits,
+    required this.currentSplitIndex,
+  });
 
   @override
   PlanerScreenState createState() => PlanerScreenState();
@@ -11,17 +21,18 @@ class PlanerScreen extends StatefulWidget {
 
 class PlanerScreenState extends State<PlanerScreen> {
   TextEditingController searchController = TextEditingController();
+  TextEditingController splitNameController = TextEditingController();
 
-  List<String> exercises = [
-    "Leg Press",
-    "Squats",
-    "Deadlift",
-    "Bench Press",
-    "Shoulder Press",
-    "Bicep Curls",
-    "Tricep Extensions",
-    "Lunges",
-    "Pull-ups",
+  List<Map<String, dynamic>> exercises = [
+    {"id": 1, "name": "Leg Press"},
+    {"id": 2, "name": "Squats"},
+    {"id": 3, "name": "Deadlift"},
+    {"id": 4, "name": "Bench Press"},
+    {"id": 5, "name": "Shoulder Press"},
+    {"id": 6, "name": "Bicep Curls"},
+    {"id": 7, "name": "Tricep Extensions"},
+    {"id": 8, "name": "Lunges"},
+    {"id": 9, "name": "Pull-ups"},
   ];
 
   List<Map<String, String>> selectedExercises = [];
@@ -30,10 +41,11 @@ class PlanerScreenState extends State<PlanerScreen> {
   List<String> frequencyOptions =
       List.generate(13, (index) => (5 + index).toString());
 
-  void addExercise(String exercise) {
+  void addExercise(Map<String, dynamic> exercise) {
     setState(() {
       selectedExercises.add({
-        'exercise': exercise,
+        'exercise_id': exercise['id'].toString(),
+        'exercise_name': exercise['name'],
         'weight': '',
         'sets': setsOptions[0],
         'frequency': frequencyOptions[0],
@@ -66,32 +78,32 @@ class PlanerScreenState extends State<PlanerScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade400,
-                  borderRadius: BorderRadius.circular(40),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 4,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(40),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 4,
+                    ),
                   ),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Split 1 Name',
-                    hintStyle: TextStyle(
+                  child: TextField(
+                    controller: splitNameController,
+                    decoration: const InputDecoration(
+                      hintText: 'Split Name',
+                      hintStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
                       color: Colors.black,
                     ),
-                    border: InputBorder.none,
-                  ),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+                    textAlign: TextAlign.center,
+                  )),
               const SizedBox(height: 10),
               Container(
                 padding:
@@ -171,7 +183,7 @@ class PlanerScreenState extends State<PlanerScreen> {
                                 Expanded(
                                   flex: 3,
                                   child: Text(
-                                    exerciseData['exercise']!,
+                                    exerciseData['exercise_name']!,
                                     style: const TextStyle(
                                       fontSize: 18,
                                       color: Colors.black,
@@ -298,7 +310,7 @@ class PlanerScreenState extends State<PlanerScreen> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   children: exercises
-                      .where((exercise) => exercise
+                      .where((exercise) => exercise['name']
                           .toLowerCase()
                           .contains(searchController.text.toLowerCase()))
                       .map((exercise) {
@@ -311,7 +323,7 @@ class PlanerScreenState extends State<PlanerScreen> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             child: Text(
-                              exercise,
+                              exercise['name'],
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -343,12 +355,45 @@ class PlanerScreenState extends State<PlanerScreen> {
                   ),
                 ),
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
-                    );
+                  onPressed: () async {
+                    final splitName = splitNameController.text.trim();
+                    if (splitName.isEmpty || selectedExercises.isEmpty) return;
+
+                    // 1. save split
+                    final splitId = await SplitService.createSplit(
+                        widget.planId, splitName);
+
+                    // 2. save exercises
+                    for (var exercise in selectedExercises) {
+                      await SplitService.addExerciseToSplit(
+                        splitId,
+                        int.parse(exercise['exercise_id']!),
+                        // ✅ richtiges Feld & Typ
+                        exercise['weight']!,
+                        int.parse(exercise['sets']!),
+                        int.parse(exercise['frequency']!),
+                      );
+                    }
+
+                    // 3. create next split or finish and go back to home screen
+                    if (widget.currentSplitIndex + 1 < widget.totalSplits) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PlanerScreen(
+                            planId: widget.planId,
+                            totalSplits: widget.totalSplits,
+                            currentSplitIndex: widget.currentSplitIndex + 1,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HomeScreen()),
+                        (route) => false,
+                      );
+                    }
                   },
                   child: const Text(
                     'Next',

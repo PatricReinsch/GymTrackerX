@@ -40,17 +40,20 @@ class HomeScreen extends StatelessWidget {
                   if (userId == null) {
                     throw Exception('User not logged in');
                   }
-                  // ignore: unused_local_variable
                   final newPlanId = await WorkoutService.createWorkoutPlan(
                       userId, "My First Plan");
 
-                  //TO DO: newPlanId is needed to assign splits to the correct workout_plan in the database
-                  // Navigate to SplitScreen with planId
+                  if (newPlanId == null) {
+                    throw Exception(
+                        'Workout-Plan konnte nicht erstellt werden');
+                  }
+
                   if (!context.mounted) return;
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SplitScreen(planId: 1),
+                      builder: (context) => SplitScreen(planId: newPlanId),
                     ),
                   );
                 } catch (e) {
