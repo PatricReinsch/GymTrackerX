@@ -6,7 +6,7 @@ und den Backend Server zu erstellen. Dazu muss das Node.js SDS installiert sein.
 2. Installiere xampp und öffne die Anwendung xampp-control
 3. Starte Apache & MySQL
 4. öffne im Browser: http://localhost/phpmyadmin/
-5. Führe die folgenden SQL Commands aus, um die Datenbanken lokal zu erstellen:
+5. Führe die folgenden SQL Commands aus, um die Datenbanken lokal zu erstellen (Aufbau der Datenbank findest du in /doc/uml/UML-Klassendiagramm_Datenbank):
    ## SQL Commands:
    CREATE DATABASE gym_tracker_x;
 
