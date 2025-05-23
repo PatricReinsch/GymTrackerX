@@ -62,4 +62,10 @@ class AuthService {
       return null;
     }
   }
+
+  // Save user_id locally
+  Future<void> saveUserId(int userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('user_id', userId);
+  }
 }

@@ -4,9 +4,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'split_screen.dart';
 import 'package:gym_tracker_x/services/workout_service.dart';
 import 'package:gym_tracker_x/utils/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  Future<int?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('user_id');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +35,15 @@ class HomeScreen extends StatelessWidget {
             InkWell(
               onTap: () async {
                 try {
-                  // Placeholder: user_id = 1, name = "My First Plan"
+                  final userId = await getUserId();
+
+                  if (userId == null) {
+                    throw Exception('User not logged in');
+                  }
                   // ignore: unused_local_variable
                   final newPlanId = await WorkoutService.createWorkoutPlan(
-                      3, "My First Plan");
+                      userId, "My First Plan");
+
                   //TO DO: newPlanId is needed to assign splits to the correct workout_plan in the database
                   // Navigate to SplitScreen with planId
                   if (!context.mounted) return;
