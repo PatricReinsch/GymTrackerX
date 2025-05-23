@@ -377,6 +377,7 @@ class PlanerScreenState extends State<PlanerScreen> {
 
                     // 3. create next split or finish and go back to home screen
                     if (widget.currentSplitIndex + 1 < widget.totalSplits) {
+                      if (!context.mounted) return;
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -388,6 +389,7 @@ class PlanerScreenState extends State<PlanerScreen> {
                         ),
                       );
                     } else {
+                      if (!context.mounted) return;
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (_) => const HomeScreen()),
