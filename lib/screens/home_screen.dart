@@ -48,9 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final newPlanId =
           await WorkoutService.createWorkoutPlan(userId, "My First Plan");
-      if (newPlanId == null)
+      if (newPlanId == null) {
         throw Exception('Workout plan could not be created');
-
+      }
       if (!context.mounted) return;
 
       Navigator.push(
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            ...workoutPlans.map(_buildWorkoutCard).toList(),
+            ...workoutPlans.map(_buildWorkoutCard),
             const SizedBox(height: 30),
           ],
         ),
