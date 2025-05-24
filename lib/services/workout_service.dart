@@ -31,4 +31,17 @@ class WorkoutService {
       return null;
     }
   }
+
+  static Future<List<Map<String, dynamic>>> fetchWorkoutPlansWithSplits(
+      int userId) async {
+    final url = Uri.parse('$baseUrl/workouts/user/$userId');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load workout plans');
+    }
+  }
 }
