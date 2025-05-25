@@ -55,3 +55,17 @@ exports.getPlansWithSplitsByUser = async (req, res) => {
     res.status(500).json({ error: 'Error when loading the workout plans' });
   }
 };
+
+exports.deleteWorkoutPlan = async (req, res) => {
+  const planId = req.params.id;
+
+  try {
+    await db.execute('DELETE FROM workout_plans WHERE id = ?', [planId]);
+    res.status(200).json({ message: 'Workout plan deleted successfully' });
+  } catch (err) {
+    console.error('Error when deleting:', err.message);
+    res.status(500).json({ error: 'Error when deleting the plan' });
+  }
+};
+
+

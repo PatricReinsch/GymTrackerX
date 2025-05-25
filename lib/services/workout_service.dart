@@ -44,4 +44,13 @@ class WorkoutService {
       throw Exception('Failed to load workout plans');
     }
   }
+
+  static Future<void> deleteWorkoutPlan(int planId) async {
+    final url = Uri.parse('$baseUrl/workouts/$planId');
+    final response = await http.delete(url);
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete workout plan');
+    }
+  }
 }

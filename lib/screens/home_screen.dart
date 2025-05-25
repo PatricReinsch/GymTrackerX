@@ -106,6 +106,38 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _confirmDeletePlan(BuildContext context, int planId) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Workout Plan?'),
+        content: const Text('Do you really want to delete this plan?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(ctx); // Close dialog
+              try {
+                await WorkoutService.deleteWorkoutPlan(planId);
+                await _loadWorkoutPlans(); // Refresh list
+              } catch (e) {
+                logger.e('Error when deleting plan: $e');
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Failed to delete plan')),
+                );
+              }
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildWorkoutCard(Map<String, dynamic> plan) {
     final List<dynamic> splits = plan['splits'] ?? [];
 
@@ -115,10 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.black,
-          width: 4,
-        ),
+        border: Border.all(color: Colors.black, width: 4),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -128,40 +157,57 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Text(
-            plan['name'],
-            style: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  plan['name'],
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ...splits.map((split) => Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.fitness_center,
+                          size: 18, color: Colors.black54),
+                      const SizedBox(width: 8),
+                      Text(
+                        split['name'],
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+              ],
             ),
           ),
-          const SizedBox(height: 20),
-          ...splits.map((split) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  children: [
-                    const Icon(Icons.fitness_center,
-                        size: 18, color: Colors.black54),
-                    const SizedBox(width: 8),
-                    Text(
-                      split['name'],
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.black54),
+              tooltip: 'Delete this plan',
+              onPressed: () => _confirmDeletePlan(context, plan['id']),
+            ),
+          ),
         ],
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
