@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showCreatePlanDialog(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
 
     showDialog(
       context: context,
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: const Text('Name your workout plan'),
           content: TextField(
-            controller: _controller,
+            controller: controller,
             autofocus: true,
             decoration: const InputDecoration(
               hintText: 'e.g. Push/Pull/Legs Plan',
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final name = _controller.text.trim();
+                final name = controller.text.trim();
                 if (name.isEmpty) return;
 
                 Navigator.pop(context); // Close dialog
@@ -86,9 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (userId == null) throw Exception('User not logged in');
 
       final newPlanId = await WorkoutService.createWorkoutPlan(userId, name);
-      if (newPlanId == null)
+      if (newPlanId == null) {
         throw Exception('Workout plan could not be created');
-
+      }
       if (!context.mounted) return;
 
       Navigator.push(
