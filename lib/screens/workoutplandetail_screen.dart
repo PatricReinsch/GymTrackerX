@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gym_tracker_x/services/workout_service.dart';
 import 'package:gym_tracker_x/services/split_service.dart';
 
 class WorkoutPlanDetailScreen extends StatefulWidget {
