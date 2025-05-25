@@ -41,16 +41,54 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _createNewPlan(BuildContext context) async {
+  void _showCreatePlanDialog(BuildContext context) {
+    final TextEditingController _controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Name your workout plan'),
+          content: TextField(
+            controller: _controller,
+            autofocus: true,
+            decoration: const InputDecoration(
+              hintText: 'e.g. Push/Pull/Legs Plan',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final name = _controller.text.trim();
+                if (name.isEmpty) return;
+
+                Navigator.pop(context); // Close dialog
+                await _createNewPlan(context, name); // Use name
+              },
+              child: const Text('Continue'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _createNewPlan(BuildContext context, String name) async {
     try {
       final userId = await _getUserId();
       if (userId == null) throw Exception('User not logged in');
 
-      final newPlanId =
-          await WorkoutService.createWorkoutPlan(userId, "My First Plan");
-      if (newPlanId == null) {
+      final newPlanId = await WorkoutService.createWorkoutPlan(userId, name);
+      if (newPlanId == null)
         throw Exception('Workout plan could not be created');
-      }
+
       if (!context.mounted) return;
 
       Navigator.push(
@@ -142,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const SizedBox(height: 20),
             InkWell(
-              onTap: () => _createNewPlan(context),
+              onTap: () => _showCreatePlanDialog(context),
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
