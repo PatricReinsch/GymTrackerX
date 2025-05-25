@@ -5,6 +5,7 @@ import 'split_screen.dart';
 import 'package:gym_tracker_x/services/workout_service.dart';
 import 'package:gym_tracker_x/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gym_tracker_x/screens/workoutplandetail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -141,73 +142,82 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildWorkoutCard(Map<String, dynamic> plan) {
     final List<dynamic> splits = plan['splits'] ?? [];
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-      margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.black, width: 4),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => WorkoutPlanDetailScreen(workoutPlan: plan),
           ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  plan['name'],
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+        margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.black, width: 4),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    plan['name'],
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                ...splits.map((split) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.fitness_center,
-                          size: 18, color: Colors.black54),
-                      const SizedBox(width: 8),
-                      Text(
-                        split['name'],
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
+                  const SizedBox(height: 20),
+                  ...splits.map((split) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.fitness_center,
+                                size: 18, color: Colors.black54),
+                            const SizedBox(width: 8),
+                            Text(
+                              split['name'],
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                )),
-              ],
+                      )),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.black54),
-              tooltip: 'Delete this plan',
-              onPressed: () => _confirmDeletePlan(context, plan['id']),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.black54),
+                tooltip: 'Delete this plan',
+                onPressed: () => _confirmDeletePlan(context, plan['id']),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

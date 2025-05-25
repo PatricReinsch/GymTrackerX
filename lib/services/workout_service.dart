@@ -53,4 +53,17 @@ class WorkoutService {
       throw Exception('Failed to delete workout plan');
     }
   }
+
+  static Future<List<Map<String, dynamic>>> fetchExercisesForSplit(
+      int splitId) async {
+    final url = Uri.parse('$baseUrl/splits/$splitId/exercises');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load exercises for split');
+    }
+  }
 }

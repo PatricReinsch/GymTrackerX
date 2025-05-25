@@ -44,4 +44,17 @@ class SplitService {
           'Failed to add exercise to split: ${response.statusCode} - ${response.body}');
     }
   }
+
+  static Future<List<Map<String, dynamic>>> fetchExercisesForSplit(
+      int splitId) async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/splits/$splitId/exercises'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load exercises for split');
+    }
+  }
 }

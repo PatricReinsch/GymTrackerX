@@ -43,3 +43,23 @@ exports.addExerciseToSplit = async (req, res) => {
     res.status(500).json({ error: 'Serverfehler beim Speichern der Übung' });
   }
 };
+
+exports.getExercisesForSplit = async (req, res) => {
+  const splitId = req.params.splitId;
+
+  try {
+    const [rows] = await db.execute(
+      `SELECT e.name, se.weight, se.sets, se.reps
+       FROM split_exercises se
+       JOIN exercises e ON se.exercise_id = e.id
+       WHERE se.split_id = ?`,
+      [splitId]
+    );
+
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error('Fehler beim Laden der Übungen:', err);
+    res.status(500).json({ error: 'Fehler beim Laden der Übungen' });
+  }
+};
+
