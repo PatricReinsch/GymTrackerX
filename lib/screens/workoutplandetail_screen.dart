@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gym_tracker_x/services/split_service.dart';
+import 'package:gym_tracker_x/screens/training_screen.dart';
 
 class WorkoutPlanDetailScreen extends StatefulWidget {
   final Map<String, dynamic> workoutPlan;
@@ -138,7 +139,15 @@ class _WorkoutPlanDetailScreenState extends State<WorkoutPlanDetailScreen> {
                           ),
                         ),
                         onPressed: () {
-                          // TODO: Implement start action
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => TrainingScreen(
+                                splitId: splitId,
+                                splitName: splitName,
+                              ),
+                            ),
+                          );
                         },
                         child: const Text(
                           'Start',
