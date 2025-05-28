@@ -22,12 +22,9 @@ class TrainingScreenState extends State<TrainingScreen> {
   List<Map<String, dynamic>> exercises = [];
 
   // Timer
-  int hours = 0;
-  int minutes = 0;
-  int seconds = 0;
-  bool isRunning = false;
+  Duration elapsedTime = Duration.zero;
   Timer? timer;
-  Duration remainingTime = Duration.zero;
+  bool isRunning = false;
 
   @override
   void initState() {
@@ -50,24 +47,13 @@ class TrainingScreenState extends State<TrainingScreen> {
   void _startTimer() {
     if (!isRunning) {
       setState(() {
-        if (remainingTime.inSeconds == 0) {
-          remainingTime =
-              Duration(hours: hours, minutes: minutes, seconds: seconds);
-        }
         isRunning = true;
       });
 
       timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (remainingTime.inSeconds > 0) {
-          setState(() {
-            remainingTime -= const Duration(seconds: 1);
-          });
-        } else {
-          timer.cancel();
-          setState(() {
-            isRunning = false;
-          });
-        }
+        setState(() {
+          elapsedTime += const Duration(seconds: 1);
+        });
       });
     }
   }
@@ -83,7 +69,7 @@ class TrainingScreenState extends State<TrainingScreen> {
     timer?.cancel();
     setState(() {
       isRunning = false;
-      remainingTime = Duration.zero;
+      elapsedTime = Duration.zero;
     });
   }
 
@@ -188,20 +174,9 @@ class TrainingScreenState extends State<TrainingScreen> {
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildPicker(
-                          "H", 24, hours, (val) => setState(() => hours = val)),
-                      _buildPicker("M", 60, minutes,
-                          (val) => setState(() => minutes = val)),
-                      _buildPicker("S", 60, seconds,
-                          (val) => setState(() => seconds = val)),
-                    ],
-                  ),
                   const SizedBox(height: 16),
                   Text(
-                    "${remainingTime.inHours.toString().padLeft(2, '0')}:${(remainingTime.inMinutes % 60).toString().padLeft(2, '0')}:${(remainingTime.inSeconds % 60).toString().padLeft(2, '0')}",
+                    "${elapsedTime.inHours.toString().padLeft(2, '0')}:${(elapsedTime.inMinutes % 60).toString().padLeft(2, '0')}:${(elapsedTime.inSeconds % 60).toString().padLeft(2, '0')}",
                     style: const TextStyle(
                         fontSize: 40, fontWeight: FontWeight.bold),
                   ),
@@ -238,50 +213,6 @@ class TrainingScreenState extends State<TrainingScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildPicker(
-      String label, int max, int selected, ValueChanged<int> onChanged) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(label,
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          SizedBox(
-            height: 150,
-            child: ListWheelScrollView.useDelegate(
-              physics: const FixedExtentScrollPhysics(),
-              itemExtent: 48,
-              onSelectedItemChanged: (index) {
-                int val = index % max;
-                onChanged(val < 0 ? val + max : val);
-              },
-              controller:
-                  FixedExtentScrollController(initialItem: max + selected),
-              childDelegate: ListWheelChildBuilderDelegate(
-                builder: (context, index) {
-                  int value = index % max;
-                  value = value < 0 ? value + max : value;
-                  bool isSelected = value == selected;
-                  return Center(
-                    child: Text(
-                      value.toString().padLeft(2, '0'),
-                      style: TextStyle(
-                        fontSize: isSelected ? 40 : 24,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected ? Colors.black : Colors.blueGrey,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
