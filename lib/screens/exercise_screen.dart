@@ -1,55 +1,66 @@
 import 'package:flutter/material.dart';
 
 class ExerciseScreen extends StatefulWidget {
-  const ExerciseScreen({super.key});
+  final Map<String, dynamic> exercise;
+
+  const ExerciseScreen({super.key, required this.exercise});
 
   @override
   ExerciseScreenState createState() => ExerciseScreenState();
 }
 
 class ExerciseScreenState extends State<ExerciseScreen> {
-  // Initialize the list of sets
-  List<ExerciseSet> exerciseSets = [
-    ExerciseSet(reps: 10, weight: 20.0),
-    ExerciseSet(reps: 12, weight: 25.0),
-    ExerciseSet(reps: 8, weight: 30.0),
-  ];
+  List<ExerciseSet> exerciseSets = [];
 
-  // Function to add a new set
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialisiere Sets basierend auf den übergebenen Übungsdaten
+    final sets = int.tryParse(widget.exercise['sets'].toString()) ?? 3;
+    final reps = int.tryParse(widget.exercise['reps'].toString()) ?? 10;
+    final weight = double.tryParse(widget.exercise['weight'].toString()) ?? 0.0;
+
+    exerciseSets = List.generate(
+      sets,
+          (_) => ExerciseSet(reps: reps, weight: weight),
+    );
+  }
+
   void _addSet() {
     setState(() {
-      exerciseSets.add(ExerciseSet(reps: 10, weight: 0.0)); // Default values
+      exerciseSets.add(ExerciseSet(reps: 10, weight: 0.0)); // Default
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final exercise = widget.exercise;
+
     return Theme(
       data: ThemeData(
-          brightness: Brightness.light,
-          primaryColor: Colors.white,
-          scaffoldBackgroundColor: Colors.white,
-          textSelectionTheme: TextSelectionThemeData(
-            cursorColor: Colors.black,
-            selectionColor: Colors.black,
+        brightness: Brightness.light,
+        primaryColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white,
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Colors.black,
+          selectionColor: Colors.black,
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black, width: 1.0),
           ),
-          inputDecorationTheme: InputDecorationTheme(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.black,
-                  width: 1.0), // black border for not focused
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.black, width: 2.0), // black boder for focused
-            ),
-          )),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black, width: 2.0),
+          ),
+        ),
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'GymTrackerX',
-            style: TextStyle(
-              fontSize: 50,
+            exercise['name'] ?? 'Übung',
+            style: const TextStyle(
+              fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -60,9 +71,10 @@ class ExerciseScreenState extends State<ExerciseScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                "${exercise['sets']} sets x ${exercise['reps']} reps – ${exercise['weight']} kg",
+                style: const TextStyle(fontSize: 18),
               ),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
                   itemCount: exerciseSets.length,
@@ -78,26 +90,13 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                             Text('Set ${index + 1}'),
                             Row(
                               children: [
-                                // Field for repetitions
                                 SizedBox(
                                   width: 80,
                                   child: TextFormField(
                                     initialValue: set.reps.toString(),
                                     keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                        labelText: 'Reps',
-                                        border: OutlineInputBorder(),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors
-                                                    .black) //here is border color normal
-                                            ),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black,
-                                                width:
-                                                    2.0) //border color when focused
-                                            )),
+                                    decoration:
+                                    const InputDecoration(labelText: 'Reps'),
                                     onChanged: (value) {
                                       setState(() {
                                         set.reps =
@@ -106,23 +105,20 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                                     },
                                   ),
                                 ),
-                                SizedBox(width: 16),
-                                // Field for weight
+                                const SizedBox(width: 16),
                                 SizedBox(
                                   width: 100,
                                   child: TextFormField(
                                     initialValue: set.weight.toString(),
                                     keyboardType:
-                                        TextInputType.numberWithOptions(
-                                            decimal: true),
-                                    decoration: InputDecoration(
-                                      labelText: 'Weight (kg)',
-                                      border: OutlineInputBorder(),
-                                    ),
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                    decoration: const InputDecoration(
+                                        labelText: 'Weight (kg)'),
                                     onChanged: (value) {
                                       setState(() {
-                                        set.weight = double.tryParse(value) ??
-                                            set.weight;
+                                        set.weight =
+                                            double.tryParse(value) ?? set.weight;
                                       });
                                     },
                                   ),
@@ -136,6 +132,7 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -150,12 +147,13 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    child: Text('Add Set'),
+                    child: const Text('Add Set'),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   ElevatedButton(
-                    onPressed: _addSet,
-                    // Timer function to be added later, placeholder for now
+                    onPressed: () {
+                      Navigator.pop(context, true); // signalisiere Erfolg
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
@@ -165,7 +163,7 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    child: Text('Timer'),
+                    child: const Text('Done'),
                   ),
                 ],
               ),
@@ -178,8 +176,8 @@ class ExerciseScreenState extends State<ExerciseScreen> {
 }
 
 class ExerciseSet {
-  int reps; // Number of repetitions
-  double weight; // Weight for the set
+  int reps;
+  double weight;
 
   ExerciseSet({required this.reps, required this.weight});
 }

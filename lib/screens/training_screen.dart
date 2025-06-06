@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gym_tracker_x/screens/exercise_screen.dart';
 import 'package:gym_tracker_x/services/workout_service.dart';
 import 'package:gym_tracker_x/widgets/custom_button_black.dart';
 
@@ -20,6 +21,7 @@ class TrainingScreen extends StatefulWidget {
 
 class TrainingScreenState extends State<TrainingScreen> {
   List<Map<String, dynamic>> exercises = [];
+  Set<int> completedExerciseIndices = {}; // Track finished exercises
 
   // Timer
   Duration elapsedTime = Duration.zero;
@@ -34,8 +36,7 @@ class TrainingScreenState extends State<TrainingScreen> {
 
   Future<void> _loadExercises() async {
     try {
-      final fetched =
-          await WorkoutService.fetchExercisesForSplit(widget.splitId);
+      final fetched = await WorkoutService.fetchExercisesForSplit(widget.splitId);
       setState(() {
         exercises = fetched;
       });
@@ -70,6 +71,21 @@ class TrainingScreenState extends State<TrainingScreen> {
     setState(() {
       isRunning = false;
       elapsedTime = Duration.zero;
+    });
+  }
+
+  void _navigateToExerciseScreen(int index) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ExerciseScreen(
+          exercise: exercises[index],
+        ),
+      ),
+    );
+
+    setState(() {
+      completedExerciseIndices.add(index);
     });
   }
 
@@ -114,43 +130,44 @@ class TrainingScreenState extends State<TrainingScreen> {
                 border: Border.all(color: Colors.black, width: 2),
               ),
               child: Column(
-                children: exercises.map((exercise) {
-                  return Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.fitness_center,
-                                color: Colors.black87),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    exercise['name'],
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                children: exercises.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final exercise = entry.value;
+                  final isCompleted = completedExerciseIndices.contains(index);
+
+                  return InkWell(
+                    onTap: () => _navigateToExerciseScreen(index),
+                    child: Container(
+                      color: isCompleted ? Colors.green[100] : null,
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.fitness_center, color: Colors.black87),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  exercise['name'],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  Text(
-                                    "${exercise['sets']} sets x ${exercise['reps']} reps – ${exercise['weight']} kg",
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black87,
-                                    ),
+                                ),
+                                Text(
+                                  "${exercise['sets']} sets x ${exercise['reps']} reps – ${exercise['weight']} kg",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const Divider(color: Colors.black, height: 1),
-                    ],
+                    ),
                   );
                 }).toList(),
               ),
@@ -158,7 +175,7 @@ class TrainingScreenState extends State<TrainingScreen> {
 
             const SizedBox(height: 30),
 
-            // Timer UI
+            // Timer
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -174,11 +191,9 @@ class TrainingScreenState extends State<TrainingScreen> {
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
-                  const SizedBox(height: 16),
                   Text(
                     "${elapsedTime.inHours.toString().padLeft(2, '0')}:${(elapsedTime.inMinutes % 60).toString().padLeft(2, '0')}:${(elapsedTime.inSeconds % 60).toString().padLeft(2, '0')}",
-                    style: const TextStyle(
-                        fontSize: 40, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   Row(
