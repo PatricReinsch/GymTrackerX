@@ -23,7 +23,7 @@ class ExerciseScreenState extends State<ExerciseScreen> {
 
     exerciseSets = List.generate(
       sets,
-          (_) => ExerciseSet(reps: reps, weight: weight),
+      (_) => ExerciseSet(reps: reps, weight: weight),
     );
   }
 
@@ -95,8 +95,8 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                                   child: TextFormField(
                                     initialValue: set.reps.toString(),
                                     keyboardType: TextInputType.number,
-                                    decoration:
-                                    const InputDecoration(labelText: 'Reps'),
+                                    decoration: const InputDecoration(
+                                        labelText: 'Reps'),
                                     onChanged: (value) {
                                       setState(() {
                                         set.reps =
@@ -111,14 +111,14 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                                   child: TextFormField(
                                     initialValue: set.weight.toString(),
                                     keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
                                     decoration: const InputDecoration(
                                         labelText: 'Weight (kg)'),
                                     onChanged: (value) {
                                       setState(() {
-                                        set.weight =
-                                            double.tryParse(value) ?? set.weight;
+                                        set.weight = double.tryParse(value) ??
+                                            set.weight;
                                       });
                                     },
                                   ),

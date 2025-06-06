@@ -36,7 +36,8 @@ class TrainingScreenState extends State<TrainingScreen> {
 
   Future<void> _loadExercises() async {
     try {
-      final fetched = await WorkoutService.fetchExercisesForSplit(widget.splitId);
+      final fetched =
+          await WorkoutService.fetchExercisesForSplit(widget.splitId);
       setState(() {
         exercises = fetched;
       });
@@ -139,10 +140,12 @@ class TrainingScreenState extends State<TrainingScreen> {
                     onTap: () => _navigateToExerciseScreen(index),
                     child: Container(
                       color: isCompleted ? Colors.green[100] : null,
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
                       child: Row(
                         children: [
-                          const Icon(Icons.fitness_center, color: Colors.black87),
+                          const Icon(Icons.fitness_center,
+                              color: Colors.black87),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Column(
@@ -193,7 +196,8 @@ class TrainingScreenState extends State<TrainingScreen> {
                   const SizedBox(height: 16),
                   Text(
                     "${elapsedTime.inHours.toString().padLeft(2, '0')}:${(elapsedTime.inMinutes % 60).toString().padLeft(2, '0')}:${(elapsedTime.inSeconds % 60).toString().padLeft(2, '0')}",
-                    style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 40, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   Row(
