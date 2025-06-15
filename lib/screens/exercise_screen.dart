@@ -23,7 +23,7 @@ class ExerciseScreenState extends State<ExerciseScreen> {
 
     exerciseSets = List.generate(
       sets,
-          (_) => ExerciseSet(reps: reps, weight: weight),
+      (_) => ExerciseSet(reps: reps, weight: weight),
     );
   }
 
@@ -111,8 +111,8 @@ class ExerciseScreenState extends State<ExerciseScreen> {
                                   child: TextFormField(
                                     initialValue: set.weight.toString(),
                                     keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
                                     decoration: const InputDecoration(
                                         labelText: 'Weight (kg)'),
                                     onChanged: (value) {
