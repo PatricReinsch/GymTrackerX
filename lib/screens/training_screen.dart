@@ -1,46 +1,61 @@
 import 'dart:async';
-
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gym_tracker_x/screens/exercise_screen.dart';
+import 'package:gym_tracker_x/services/workout_service.dart';
 import 'package:gym_tracker_x/widgets/custom_button_black.dart';
 
 class TrainingScreen extends StatefulWidget {
-  const TrainingScreen({super.key});
+  final int splitId;
+  final String splitName;
+
+  const TrainingScreen({
+    super.key,
+    required this.splitId,
+    required this.splitName,
+  });
 
   @override
   TrainingScreenState createState() => TrainingScreenState();
 }
 
 class TrainingScreenState extends State<TrainingScreen> {
-  int hours = 0;
-  int minutes = 0;
-  int seconds = 0;
-  bool isRunning = false;
+  List<Map<String, dynamic>> exercises = [];
+  Set<int> completedExerciseIndices = {}; // Track finished exercises
+
+  // Timer
+  Duration elapsedTime = Duration.zero;
   Timer? timer;
-  Duration remainingTime = Duration();
+  bool isRunning = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadExercises();
+  }
+
+  Future<void> _loadExercises() async {
+    try {
+      final fetched =
+          await WorkoutService.fetchExercisesForSplit(widget.splitId);
+      setState(() {
+        exercises = fetched;
+      });
+    } catch (e) {
+      // handle error
+    }
+  }
 
   void _startTimer() {
     if (!isRunning) {
       setState(() {
-        if (remainingTime.inSeconds == 0) {
-          remainingTime =
-              Duration(hours: hours, minutes: minutes, seconds: seconds);
-        }
         isRunning = true;
       });
 
       timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (remainingTime.inSeconds > 0) {
-          setState(() {
-            remainingTime -= const Duration(seconds: 1);
-          });
-        } else {
-          timer.cancel();
-          setState(() {
-            isRunning = false;
-          });
-        }
+        setState(() {
+          elapsedTime += const Duration(seconds: 1);
+        });
       });
     }
   }
@@ -56,8 +71,29 @@ class TrainingScreenState extends State<TrainingScreen> {
     timer?.cancel();
     setState(() {
       isRunning = false;
-      remainingTime = Duration.zero;
+      elapsedTime = Duration.zero;
     });
+  }
+
+  void _navigateToExerciseScreen(int index) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ExerciseScreen(
+          exercise: exercises[index],
+        ),
+      ),
+    );
+
+    setState(() {
+      completedExerciseIndices.add(index);
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -65,53 +101,86 @@ class TrainingScreenState extends State<TrainingScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 150,
+        centerTitle: true,
         title: SvgPicture.asset(
           'assets/images/logo/svg/logo-no-background.svg',
           height: 65,
           fit: BoxFit.cover,
         ),
-        centerTitle: true,
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Push",
-              style: TextStyle(
+              widget.splitName,
+              style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
             ),
             const SizedBox(height: 20),
+
+            // List of Exercises
             Container(
-              width: 300,
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(color: Colors.black, width: 2),
               ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildRow(
-                      context, 'Leg Press', Colors.green, '/exercisescreen'),
-                  Divider(color: Colors.black, height: 1, thickness: 1),
-                  _buildRow(context, 'Curls', Colors.green, '/exercisescreen'),
-                  Divider(color: Colors.black, height: 1, thickness: 1),
-                  _buildRow(context, '1234', Colors.green, '/exercisescreen'),
-                  Divider(color: Colors.black, height: 1, thickness: 1),
-                  _buildRow(context, '5674', Colors.red, '/exercisescreen'),
-                  Divider(color: Colors.black, height: 1, thickness: 1),
-                  _buildRow(context, '19323', Colors.white, '/exercisescreen'),
-                ],
+                children: exercises.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final exercise = entry.value;
+                  final isCompleted = completedExerciseIndices.contains(index);
+
+                  return InkWell(
+                    onTap: () => _navigateToExerciseScreen(index),
+                    child: Container(
+                      color: isCompleted ? Colors.green[100] : null,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.fitness_center,
+                              color: Colors.black87),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  exercise['name'],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  "${exercise['sets']} sets x ${exercise['reps']} reps – ${exercise['weight']} kg",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
-            const SizedBox(height: 25),
-            // Timer UI
+
+            const SizedBox(height: 30),
+
+            // Timer
             Container(
-              width: 300,
+              width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -120,53 +189,15 @@ class TrainingScreenState extends State<TrainingScreen> {
               ),
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     "Timer",
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildPicker(
-                        "H",
-                        24,
-                        hours,
-                        (value) {
-                          setState(() {
-                            hours = value;
-                          });
-                        },
-                      ),
-                      _buildPicker(
-                        "M",
-                        60,
-                        minutes,
-                        (value) {
-                          setState(() {
-                            minutes = value;
-                          });
-                        },
-                      ),
-                      _buildPicker(
-                        "S",
-                        60,
-                        seconds,
-                        (value) {
-                          setState(() {
-                            seconds = value;
-                          });
-                        },
-                      ),
-                    ],
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    "${remainingTime.inHours.toString().padLeft(2, '0')}:${(remainingTime.inMinutes % 60).toString().padLeft(2, '0')}:${(remainingTime.inSeconds % 60).toString().padLeft(2, '0')}",
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    "${elapsedTime.inHours.toString().padLeft(2, '0')}:${(elapsedTime.inMinutes % 60).toString().padLeft(2, '0')}:${(elapsedTime.inSeconds % 60).toString().padLeft(2, '0')}",
+                    style: const TextStyle(
+                        fontSize: 40, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -180,7 +211,7 @@ class TrainingScreenState extends State<TrainingScreen> {
                       ),
                       IconButton(
                         onPressed: _resetTimer,
-                        icon: Icon(Icons.stop),
+                        icon: const Icon(Icons.stop),
                         color: Colors.red,
                         iconSize: 40,
                       ),
@@ -189,79 +220,18 @@ class TrainingScreenState extends State<TrainingScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 40),
+
             // Finish Button
-            CustomButtonBlack(label: "Finish", onPressed: () {}),
+            CustomButtonBlack(
+              label: "Finish",
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildRow(
-      BuildContext context, String text, Color color, String route) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, route);
-      },
-      child: Container(
-        color: color,
-        padding: EdgeInsets.symmetric(vertical: 8),
-        alignment: Alignment.center,
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPicker(
-      String label, int max, int selectedValue, ValueChanged<int> onChanged) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(label,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          SizedBox(
-            height: 150,
-            child: ListWheelScrollView.useDelegate(
-              physics: const FixedExtentScrollPhysics(),
-              itemExtent: 48,
-              onSelectedItemChanged: (index) {
-                int actualValue = index % max;
-                if (actualValue < 0) {
-                  actualValue += max;
-                }
-                onChanged(actualValue);
-              },
-              controller:
-                  FixedExtentScrollController(initialItem: max + selectedValue),
-              childDelegate: ListWheelChildBuilderDelegate(
-                builder: (context, index) {
-                  int value = index % max;
-                  if (value < 0) value += max;
-                  bool isSelected = value == selectedValue;
-                  return Center(
-                    child: Text(
-                      value.toString().padLeft(2, '0'),
-                      style: TextStyle(
-                        fontSize: isSelected ? 40 : 24,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected ? Colors.black : Colors.blueGrey,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -62,7 +62,12 @@ router.post('/login', async (req, res) => {
     );
 
     // Return the token
-    res.status(200).json({ token });
+    res.status(200).json({
+      userId: user.id,
+      username: user.username,
+      token: token
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error.' });
